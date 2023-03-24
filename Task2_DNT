@@ -1,0 +1,43 @@
+import cv2
+
+# Load the input video
+input_video = cv2.VideoCapture('input_video.mp4')
+
+# Get the frames per second (fps) of the input video
+fps = int(input_video.get(cv2.CAP_PROP_FPS))
+
+# Define the codec for the output video
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+
+# Get the video dimensions
+width = int(input_video.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(input_video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+# Create the output video writer
+output_video = cv2.VideoWriter('output_video.mp4', fourcc, fps, (width, height))
+
+# Loop through the frames of the input video
+while input_video.isOpened():
+    # Read a frame from the input video
+    ret, frame = input_video.read()
+
+    # Check if the frame was successfully read
+    if not ret:
+        break
+
+    # Skip 75% of the frames
+    if input_video.get(cv2.CAP_PROP_POS_FRAMES) % 4 == 0:
+        # Write the frame to the output video
+        output_video.write(frame)
+
+    # Display the frame
+    cv2.imshow('frame', frame)
+    if cv2.waitKey(1) == ord('q'):
+        break
+
+# Release the video capture and writer objects
+input_video.release()
+output_video.release()
+
+# Close all windows
+cv2.destroyAllWindows()
